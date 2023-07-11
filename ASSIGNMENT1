@@ -1,0 +1,142 @@
+Objective: - Predict Next Sequence
+To start with deep learning, the very basic project that you can build is to
+predict the next digit in a sequence.
+
+Dataset: - Create a sequence like a list of odd numbers and then build a model
+and train it to predict the next digit in the sequence.
+
+Task: - A simple neural network with 2 layers would be sufficient to build the
+model.
+
+SOLUTION.
+Objective: - Predict Next Sequence
+To start with deep learning, the very basic project that you can build is to
+predict the next digit in a sequence.
+
+Dataset: - Create a sequence like a list of odd numbers and then build a model
+and train it to predict the next digit in the sequence.
+
+Task: - A simple neural network with 2 layers would be sufficient to build the
+model.
+
+solution-
+pip install tensorflow
+pip install keras
+
+
+import numpy as np
+from keras.models import Sequential
+from keras.layers import Dense
+
+# Define the sequence limit and the number of previous odd numbers to consider
+sequence_limit = 100
+num_previous_numbers = 3
+
+# Generate the odd number sequence
+odd_numbers = np.arange(1, sequence_limit + 1, 2)
+
+# Generate the input sequences and corresponding labels
+input_sequences = []
+labels = []
+for i in range(len(odd_numbers) - num_previous_numbers):
+    input_sequences.append(odd_numbers[i:i+num_previous_numbers])
+    labels.append(odd_numbers[i+num_previous_numbers])
+
+# Convert the sequences and labels to numpy arrays
+input_sequences = np.array(input_sequences)
+labels = np.array(labels)
+
+# Build the model
+model = Sequential()
+model.add(Dense(10, input_dim=num_previous_numbers, activation='relu'))  # First hidden layer with 10 units
+model.add(Dense(1))  # Output layer with a single unit
+print(model)
+
+# Compile the model
+model.compile(loss='mean_squared_error', optimizer='adam')
+
+# Train the model
+model.fit(input_sequences, labels, epochs=100, batch_size=1)
+
+# Generate the next number in the sequence
+test_sequence = np.array([odd_numbers[-num_previous_numbers:]])
+predicted_number = model.predict(test_sequence)
+
+next_number = int(predicted_number[0][0])
+print("Next number in the sequence:", next_number)
+
+explaination-
+Certainly! Let's go through each step and variable in the program:
+
+1. **Importing the required libraries:**
+```python
+import numpy as np
+from keras.models import Sequential
+from keras.layers import Dense
+```
+We import the necessary libraries. `numpy` is used for array operations, and `Sequential` and `Dense` are classes from Keras for building and configuring the neural network model.
+
+2. **Defining the sequence limit and the number of previous odd numbers:**
+```python
+sequence_limit = 100
+num_previous_numbers = 3
+```
+Here, we define the upper limit of the sequence (100 in this case) and the number of previous odd numbers to consider for predicting the next digit (3 in this case).
+
+3. **Generating the odd number sequence:**
+```python
+odd_numbers = np.arange(1, sequence_limit + 1, 2)
+```
+This line generates an array of odd numbers from 1 to `sequence_limit` (inclusive) with a step of 2. The `np.arange()` function from NumPy is used for this.
+
+4. **Generating the input sequences and labels:**
+```python
+input_sequences = []
+labels = []
+for i in range(len(odd_numbers) - num_previous_numbers):
+    input_sequences.append(odd_numbers[i:i+num_previous_numbers])
+    labels.append(odd_numbers[i+num_previous_numbers])
+```
+In this loop, we iterate over the odd numbers and create input sequences and corresponding labels. For each iteration, we take `num_previous_numbers` previous odd numbers as the input sequence, and the next odd number as the label. These sequences and labels are stored in the `input_sequences` and `labels` lists, respectively.
+
+5. **Converting the sequences and labels to numpy arrays:**
+```python
+input_sequences = np.array(input_sequences)
+labels = np.array(labels)
+```
+After generating the sequences and labels, we convert them to NumPy arrays using `np.array()` for compatibility with the neural network model.
+
+6. **Building the neural network model:**
+```python
+model = Sequential()
+model.add(Dense(10, input_dim=num_previous_numbers, activation='relu'))
+model.add(Dense(1))
+```
+Here, we create an instance of the `Sequential` class to build our model. We add a dense (fully connected) layer with 10 units/neurons and ReLU activation as the first hidden layer using `model.add(Dense(10, input_dim=num_previous_numbers, activation='relu'))`. Then, we add an output layer with a single unit (for predicting the next digit) using `model.add(Dense(1))`.
+
+7. **Compiling the model:**
+```python
+model.compile(loss='mean_squared_error', optimizer='adam')
+```
+We compile the model using `model.compile()`. We specify the loss function as mean squared error (`'mean_squared_error'`) and the optimizer as Adam (`'adam'`). These choices depend on the specific problem and can be adjusted as needed.
+
+8. **Training the model:**
+```python
+model.fit(input_sequences, labels, epochs=100, batch_size=1)
+```
+We train the model using `model.fit()`. We provide the input sequences (`input_sequences`) and corresponding labels (`labels`) as the training data. We set the number of training epochs as 100 (`epochs=100`) and the batch size as 1 (`batch_size=1`), meaning we update the model's parameters after each input sequence.
+
+9. **Generating the next number in the sequence:**
+```python
+test_sequence = np.array([odd_numbers[-num_previous_numbers:]])
+predicted_number = model.predict(test_sequence)
+
+next_number = int(predicted_number[0][0])
+print("Next number in the sequence:", next_number)
+```
+To generate the next number in the sequence, we create a test sequence containing the last `num_previous_numbers` odd numbers from the original sequence. We pass this test sequence to the trained model using `model.predict()`, which returns the predicted value. Finally, we convert the predicted value to an integer and print it as the next number in the sequence.
+
+That's a step-by-step explanation of each part of the program.
+
+
+
